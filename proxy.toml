@@ -1,0 +1,45 @@
+# proxy.toml: sample configuration for proxy.py and run-proxy.sh
+#
+# Use:  ./run-proxy.sh --config proxy.toml          (or PROXY_CONFIG=proxy.toml)
+#       python3 proxy.py --config proxy.toml
+#
+# Precedence, highest first:  command-line flags > environment variables > this file
+#                             > built-in defaults
+#
+# NEVER put API keys in this file. It holds only keychain item *names*;
+# the launcher reads the keys from the keychain.
+
+# ---- Options for proxy.py (same meaning as the flags) ----------------------
+[proxy]
+host = "127.0.0.1"          # keep loopback: the proxy has no client auth
+port = 8080
+verbose = false
+disable = ["deepinfra"]     # list or "a,b"; same as --disable (applied at "config" level)
+enable  = []                # same as --enable
+
+# ---- Launcher defaults for every provider (run-proxy.sh) -------------------
+[keychain]
+account = "alice"                                  # default -a; falls back to $USER
+#file    = "~/Library/Keychains/agent.keychain-db"  # default -k; omit = search list
+
+# ---- Per-provider settings (run-proxy.sh) ----------------------------------
+# item     = keychain item/service name   (same as -s PROVIDER=ITEM)
+# account  = account for this provider    (same as -a PROVIDER=ACCOUNT)
+# keychain = keychain file for this one   (same as -k PROVIDER=KEYCHAIN)
+# enabled  = false skips it in the launcher (same as -d PROVIDER)
+
+[providers.openai]
+item = "openai-api-key"
+account = "bob"
+keychain = "login.keychain-db"
+enabled = false             # configured but switched off
+
+[providers.anthropic]
+item = "anthropic-api-key"
+
+[providers.openrouter]
+item = "openrouter-api-key"
+account = "default@openrouter.ai"
+
+[providers.deepinfra]
+item = "deepinfra-api-key"
